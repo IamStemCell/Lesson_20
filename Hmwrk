@@ -1,0 +1,104 @@
+#Task1 
+#Pick your solution to one of the exercises in this module. Design tests for this solution and write tests using unittest library.
+
+Tests are written for Task 1 from Lesson 16
+
+class Person:
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        
+    def talk(self):
+        print(f"Hello! My name is {self.name}. I'm {self.age} years old and I identify as {self.gender}.")
+        
+class Student(Person):
+    def __init__(self, name, age, gender, grades):
+        super().__init__(name, age, gender) #take from main commom Person
+        self.grades = grades #grades are for students
+        self.studyprograms = []
+        self.menteeprograms = []
+        self.sportsteams = []
+        
+    def add_program(self, program): #method add_programs is for Students 
+        self.studyprograms.append(program)
+        print(f"{self.name} has enrolled into {program} class.")
+
+    def add_menteeprogram(self,menteeprogram):
+        self.menteeprograms.append(menteeprogram)
+        print(f"{self.name} added {menteeprogram} to their schedule.")
+
+    def add_sportsteam(self,sportsteam):
+        self.sportsteams.append(sportsteam)
+        print(f"{self.name} joined team {sportsteam} as extra curriculum activity.")
+        
+    def list_programs(self):
+        print(f"{self.name}'s programs: {', '.join(self.studyprograms)}")
+        
+class Teacher(Person):
+    def __init__(self, name, age, gender, subject, salary):
+        super().__init__(name, age, gender) #common to all, taken from main class Person
+        self.subject = subject
+        self.salary = salary
+        self.courses_mentored = [] 
+        
+    def add_course_mentored(self,course):
+        self.courses_mentored.append(course)
+        print(f"{self.name} will become a mentor of the {course}.")
+        
+    def list_courses_mentored(self):
+        print(f"Courses mentored by {self.name}: {', '.join(self.courses_mentored)}")
+
+import unittest
+
+class TestStudent(unittest.TestCase):
+    def test_student_creation(self):
+        s = Student("Alice", 18, "female", {"math": 90, "history": 85})
+        self.assertEqual(s.name, "Alice")
+        self.assertEqual(s.age, 18)
+        self.assertEqual(s.gender, "female")
+        self.assertEqual(s.grades, {"math": 90, "history": 85})
+
+    def test_student_add_program(self):
+        s = Student("Alice", 18, "female", {"math": 90, "history": 85})
+        s.add_program("Science")
+        self.assertEqual(s.studyprograms, ["Science"])
+
+    def test_student_add_menteeprogram(self):
+        s = Student("Alice", 18, "female", {"math": 90, "history": 85})
+        s.add_menteeprogram("Mentee Program")
+        self.assertEqual(s.menteeprograms, ["Mentee Program"])
+
+    def test_student_add_sportsteam(self):
+        s = Student("Alice", 18, "female", {"math": 90, "history": 85})
+        s.add_sportsteam("Basketball")
+        self.assertEqual(s.sportsteams, ["Basketball"])
+
+    def test_student_list_programs(self):
+        s = Student("Alice", 18, "female", {"math": 90, "history": 85})
+        s.add_program("Science")
+        s.add_program("English")
+        self.assertEqual(s.list_programs(), "Alice's programs: Science, English")
+
+class TestTeacher(unittest.TestCase):
+    def test_teacher_creation(self):
+        t = Teacher("Bob", 30, "male", "Math", 50000)
+        self.assertEqual(t.name, "Bob")
+        self.assertEqual(t.age, 30)
+        self.assertEqual(t.gender, "male")
+        self.assertEqual(t.subject, "Math")
+        self.assertEqual(t.salary, 50000)
+
+    def test_teacher_add_course_mentored(self):
+        t = Teacher("Bob", 30, "male", "Math", 50000)
+        t.add_course_mentored("Calculus")
+        self.assertEqual(t.courses_mentored, ["Calculus"])
+
+    def test_teacher_list_courses_mentored(self):
+        t = Teacher("Bob", 30, "male", "Math", 50000)
+        t.add_course_mentored("Calculus")
+        t.add_course_mentored("Algebra")
+        self.assertEqual(t.list_courses_mentored(), "Courses mentored by Bob: Calculus, Algebra")
+
+if __name__ == '__main__':
+    unittest.main()
