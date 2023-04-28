@@ -291,3 +291,67 @@ class TestPhonebook(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+#пункт меню 2,3,6,7 пoшукoвий шаблoн search by first name,last name,city,state
+
+def search_dict(contacts_data, search_item):
+    results = []
+    for key, value in contacts_data.items():
+        if isinstance(value, dict):
+           results += [f"{key}.{value}" for subkey in search_dict(value, search_item)]
+        elif search_item in str(value):
+           results.append(key)
+    return results
+
+import unittest
+
+class TestSearchDict(unittest.TestCase):
+    
+    def setUp(self):
+        self.contacts_data = {
+            "888-1234": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "city": "Springfield",
+                "state": "IL"
+            },
+            "888-5678": {
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "city": "Chicago",
+                "state": "IL"
+            },
+            "888-9999": {
+                "first_name": "John",
+                "last_name": "Smith",
+                "city": "Springfield",
+                "state": "OH"
+            }
+        }
+    
+    def test_search_by_first_name(self):
+        result = search_dict(self.contacts_data, "John")
+        self.assertEqual(len(result), 2)
+        self.assertIn("888-1234", result)
+        self.assertIn("888-9999", result)
+    
+    def test_search_by_last_name(self):
+        result = search_dict(self.contacts_data, "Smith")
+        self.assertEqual(len(result), 2)
+        self.assertIn("888-5678", result)
+        self.assertIn("888-9999", result)
+    
+    def test_search_by_city(self):
+        result = search_dict(self.contacts_data, "Springfield")
+        self.assertEqual(len(result), 2)
+        self.assertIn("888-1234", result)
+        self.assertIn("888-9999", result)
+    
+    def test_search_by_state(self):
+        result = search_dict(self.contacts_data, "IL")
+        self.assertEqual(len(result), 2)
+        self.assertIn("888-1234", result)
+        self.assertIn("888-5678", result)
+
+if __name__ == '__main__':
+    unittest.main()
