@@ -152,3 +152,66 @@ class TestAddNew(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+#пункт меню 8 del entry
+        
+def delete_rec(contacts_data, phone_number):
+    """Delete entry from the phonebook iterating over dict by the key"""
+    if phone_number in contacts_data:
+        del contacts_data[phone_number]
+        print("Entry deleted.")
+    else:
+        print("Invalid request.")
+        
+#пункт меню 4 search by full name
+
+def search_by_full(contacts_data, full_name):
+    results = []
+    for phone_number, contact in contacts_data.items():
+        name = contact["first_name"] +" "+contact["last_name"]
+        if full_name == name:
+           results.append((phone_number,contact))
+    return results
+
+import unittest
+
+class TestPhonebook(unittest.TestCase):
+    
+    def setUp(self):
+        self.contacts_data = {
+            "888-1234": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "city": "Springfield",
+                "state": "IL"
+            },
+            "888-5678": {
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "city": "Chicago",
+                "state": "IL"
+            }
+        }
+    
+    def test_delete_valid_entry(self):
+        delete_rec(self.contacts_data, "888-1234")
+        self.assertNotIn("555-1234", self.contacts_data)
+    
+    def test_delete_invalid_entry(self):
+        delete_rec(self.contacts_data, "888-9999")
+        self.assertIn("888-1234", self.contacts_data)
+        self.assertIn("888-5678", self.contacts_data)
+    
+    def test_search_by_full_valid_name(self):
+        results = search_by_full(self.contacts_data, "Jane Smith")
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0][0], "888-5678")
+        self.assertEqual(results[0][1]["first_name"], "Jane")
+        self.assertEqual(results[0][1]["last_name"], "Smith")
+    
+    def test_search_by_full_invalid_name(self):
+        results = search_by_full(self.contacts_data, "John Smith")
+        self.assertEqual(len(results), 0)
+
+if __name__ == '__main__':
+    unittest.main()
