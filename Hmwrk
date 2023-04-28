@@ -102,3 +102,53 @@ class TestTeacher(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+#Task2 PhoneBookapp unittests library
+#пункт меню 1 add entry 
+
+def add_new(contacts_data):
+    '''adds new entry to our contacts
+    '''
+    phone_number = input("Type phone number: ")
+    first_name = input("Type first name: ")
+    last_name = input("Type last name: ")
+    city = input("Type city: ")
+    state = input("Type state: ")
+    new_entry = {
+        "first_name":first_name,
+        "last_name": last_name,
+        "city": city,
+        "state": state
+
+    }
+    contacts_data[phone_number] = new_entry
+    return contacts_data
+
+#пункт меню 1 add entry test 
+import unittest
+
+class TestAddNew(unittest.TestCase):
+    
+    def setUp(self):
+        self.contacts_data = {
+            "888-1234": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "city": "Springfield",
+                "state": "IL"
+            }
+        }
+    
+    def test_add_new_entry(self):
+        new_contacts_data = add_new(self.contacts_data)
+        self.assertEqual(len(new_contacts_data), 2)
+        self.assertIn("888-1234", new_contacts_data)
+        self.assertIn("123-4567", new_contacts_data)
+        self.assertEqual(new_contacts_data["123-4567"]["first_name"], "Jane")
+        self.assertEqual(new_contacts_data["123-4567"]["last_name"], "Smith")
+        self.assertEqual(new_contacts_data["123-4567"]["city"], "Chicago")
+        self.assertEqual(new_contacts_data["123-4567"]["state"], "IL")
+
+if __name__ == '__main__':
+    unittest.main()
